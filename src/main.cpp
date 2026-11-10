@@ -1,12 +1,5 @@
 #include <iostream>
-#include "Appointment.h"
-#include "Bill.h"
-#include "BillingStaff.h"
-#include "ClinicalStaff.h"
-#include "Patient.h"
-#include "Physician.h"
-#include "SchedulingStaff.h"
-#include "User.h"
+#include "../headers/Headers.h"
 using namespace std; 
 
 int authenticate(); 
@@ -23,7 +16,6 @@ void viewPatient(int selection);
 void checkInPatient(); 
 void editPatientInfo(); 
 void showAuthError(); 
-
 
 int main() {
 

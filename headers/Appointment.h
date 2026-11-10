@@ -15,7 +15,6 @@ class Appointment {
     ClinicalStaff staff;
     Patient patient;
     string description;
-
 };
 
 #endif
