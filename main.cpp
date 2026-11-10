@@ -1,4 +1,12 @@
 #include <iostream>
+#include "Appointment.h"
+#include "Bill.h"
+#include "BillingStaff.h"
+#include "ClinicalStaff.h"
+#include "Patient.h"
+#include "Physician.h"
+#include "SchedulingStaff.h"
+#include "User.h"
 using namespace std; 
 
 int authenticate(); 
@@ -39,7 +47,7 @@ void viewPatientDashboard() {
     //Present options
     //Based on what user chooses, execute one of following functions. 
     viewAppointments(); 
-    viewSpecialtyList()
+	viewSpecialtyList();
     viewProviderList(); 
 
     //Give user option to exit application.
@@ -50,8 +58,8 @@ void viewStaffDashboard() {
 
 	//Present options
 	//Based on what the user chooses, execute the following functions. 
-	viewPatients()
-	viewPatientAppointments()
+	viewPatients();
+	viewPatientAppointments();
 	
 	//Give user the option to exit application.
 
