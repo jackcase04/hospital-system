@@ -9,6 +9,9 @@ SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPS = $(OBJS:.o=.d)
 
+run: $(TARGET)
+	./$(TARGET)
+
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
