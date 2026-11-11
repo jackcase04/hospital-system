@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <memory>
+#include <unordered_map>
 
 using namespace std; 
 
@@ -25,7 +26,7 @@ void editPatientInfo();
 void showAuthError(); 
 
 // Our fake "database" with the users
-vector<unique_ptr<User>> users;
+unordered_map<int, unique_ptr<User>> users;
 
 int main() {
     init_fake_database();
@@ -43,31 +44,57 @@ int main() {
 }
 
 void init_fake_database() {
-    // Add some fake users
-    users.push_back(make_unique<Physician>(0, "Jack", "123 Random St", "09-10-2004"));
-    users.push_back(make_unique<BillingStaff>(1, "Case", "123 Random St", "05-20-2004"));
-    users.push_back(make_unique<ClinicalStaff>(2, "Connor", "456 Hello St", "12-23-2004"));
-    users.push_back(make_unique<Patient>(3, "Person1", "101 Patient St", "01-01-2001"));
-    users.push_back(make_unique<Patient>(4, "Person2", "102 Patient St", "03-03-2003"));
-    users.push_back(make_unique<SchedulingStaff>(5, "Maris", "984 Hello St", "04-03-2003"));
+    // All our users
+    auto physician = make_unique<Physician>(0, "Jack", "123 Random St", "09-10-2004");
+    auto billing = make_unique<BillingStaff>(1, "Case", "123 Random St", "05-20-2004");
+    auto clinical = make_unique<ClinicalStaff>(2, "Connor", "456 Hello St", "12-23-2004");
+    auto patient1 = make_unique<Patient>(3, "Person1", "101 Patient St", "01-01-2001");
+    auto patient2 = make_unique<Patient>(4, "Person2", "102 Patient St", "03-03-2003");
+    auto scheduler = make_unique<SchedulingStaff>(5, "Maris", "984 Hello St", "04-03-2003");
+
+    // Add relationships
+    clinical->patients[3] = patient1.get();
+    clinical->patients[4] = patient2.get();
+    physician->patients[3] = patient1.get();
+    physician->patients[4] = patient2.get();
+   
+    // Add them to db
+    users[0] = std::move(physician);
+    users[1] = std::move(billing);
+    users[2] = std::move(clinical);
+    users[3] = std::move(patient1);
+    users[4] = std::move(patient2);
+    users[5] = std::move(scheduler);
 }
 
 User* authenticate() {
-    int role;
-
     cout << "\n-----------------------------------------------------\n";
     cout << "------------------Authentication---------------------\n";
 
     for (auto &user : users) {
-        user.get()->display_info();
+        user.second.get()->display_info();
+        cout << "\n";
     }
     
     cout << "Enter the ID of your user: ";
 
-    while (!(cin >> role) || (role < 0 || role >= users.size())) {
-        cout << "Invalid input. Try again: ";
-        cin.clear();
-        cin.ignore(10000, '\n'); 
+    int role;
+
+    while (true) {
+        while (!(cin >> role)) {
+            cout << "Invalid input. Try again: ";
+            cin.clear();
+            cin.ignore(10000, '\n'); 
+        }
+
+        auto it = users.find(role);
+        if (it != users.end()) {
+            break;
+        } else {
+            cout << "Invalid input. Try again: ";
+            cin.clear();
+            cin.ignore(10000, '\n'); 
+        }
     }
 
     return users[role].get();
@@ -89,7 +116,58 @@ void viewPatientDashboard(User* user) {
 void viewStaffDashboard(User* user) {
     cout << "\n\n-----------------------------------------------------\n";
     cout << "------------------Staff Dashboard--------------------\n\n";
-    cout << "Logged in as: " << user->name << endl;
+    cout << "Hello, " << user->name << endl;
+    cout << "What would you like to do today?\n";
+
+    string role = user->role();
+    bool can_view = false;
+
+    Physician* physician;
+   
+    // Just doing physician right now for simplicity. Spent too long trying to get others to work also
+    if (role == "Physician") {
+        physician = dynamic_cast<Physician*>(user);
+        can_view = true;
+        cout << "Type 1 to view your patients\n";
+    }
+    
+    cout << "Type 0 to quit\n";
+
+    int choice;
+
+    while (!(cin >> choice) || (choice < 0 || choice > can_view ? 1 : 0)) {
+        cout << "Invalid input. Try again: ";
+        cin.clear();
+        cin.ignore(10000, '\n'); 
+    }
+
+    if (choice == 1) {
+        for (auto pat : physician->patients) {
+            cout << "\n";
+            pat.second->display_info();
+        }
+
+        cout << "Enter the id of the patient you wish to view the appointments of: ";
+
+        while (true) {
+            while (!(cin >> choice)) {
+                cout << "Invalid input. Try again: ";
+                cin.clear();
+                cin.ignore(10000, '\n'); 
+            }
+
+            auto it = physician->patients.find(choice);
+            if (it != physician->patients.end()) {
+                break;
+            } else {
+                cout << "Invalid input. Try again: ";
+                cin.clear();
+                cin.ignore(10000, '\n'); 
+            }
+        }
+
+        cout << "Finally a valid input\n";
+    }
 
 	//Present options
 	//Based on what the user chooses, execute the following functions. 

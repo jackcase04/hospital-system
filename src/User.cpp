@@ -14,4 +14,5 @@ User::User(int id, std::string name, std::string address, std::string birthday) 
 void User::display_info() {
     cout << "Id: " << id << endl;
     cout << "Name: " << name << endl;
+    cout << "Role: " << role() << endl;
 }

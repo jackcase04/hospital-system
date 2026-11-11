@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 class Patient;
 class Appointment;
@@ -19,7 +20,7 @@ class ClinicalStaff : public User {
         std::string role() const override { return "ClinicalStaff"; }
 
         std::vector<std::string> personal_profile;
-        std::vector<Patient> patients;
+        std::unordered_map<int, Patient*> patients;
 
         std::vector<Appointment> view_patient_appointments(Patient &patient);
         std::vector<std::string> view_patient_history(Patient &patient);
