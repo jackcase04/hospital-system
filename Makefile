@@ -9,8 +9,7 @@ SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPS = $(OBJS:.o=.d)
 
-run: $(TARGET)
-	./$(TARGET)
+
 
 all: $(TARGET)
 
@@ -23,9 +22,12 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
+run: $(TARGET)
+	./$(TARGET)
+
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
 
 -include $(DEPS)
 
-.PHONY: all clean
+.PHONY: all clean run

@@ -11,6 +11,11 @@
 
 class Patient : public User {
     public:
+        using User::User;
+        using User::display_info;
+
+        std::string role() const override { return "Patient"; }
+
         std::vector<std::string> messages;
         std::string patient_profile;
         std::vector<Appointment> appointments;

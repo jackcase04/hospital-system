@@ -13,6 +13,11 @@ class Appointment;
 
 class ClinicalStaff : public User {
     public:
+        using User::User;
+        using User::display_info;
+
+        std::string role() const override { return "ClinicalStaff"; }
+
         std::vector<std::string> personal_profile;
         std::vector<Patient> patients;
 

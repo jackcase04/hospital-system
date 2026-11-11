@@ -11,6 +11,10 @@
 
 class SchedulingStaff : public User {
     public:
+        using User::User;
+        using User::display_info;
+        std::string role() const override { return "SchedulingStaff"; }
+
         std::vector<Appointment> appointments;
 
         void message_patient(Patient patient, std::string message);
