@@ -11,6 +11,10 @@ class Patient;
 
 class BillingStaff : public User {
     public:
+        using User::User;
+        using User::display_info;
+        std::string role() const override { return "BillingStaff"; }
+
         void add_bill(Patient &patient, Bill bill);
         std::string view_insurance(Patient &patient);
 };

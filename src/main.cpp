@@ -1,11 +1,17 @@
+#include "BillingStaff.h"
+#include "ClinicalStaff.h"
+#include "Physician.h"
+#include "SchedulingStaff.h"
+
 #include <iostream>
-#include "Headers.h"
+#include <memory>
 
 using namespace std; 
 
-int authenticate(); 
-void viewPatientDashboard(); 
-void viewStaffDashboard();
+void init_fake_database();
+User* authenticate(); 
+void viewPatientDashboard(User* user); 
+void viewStaffDashboard(User* user);
 void viewAppointments(); 
 void viewAppointmentDetails(int selection);
 void viewSpecialtyList();
@@ -18,28 +24,57 @@ void checkInPatient();
 void editPatientInfo(); 
 void showAuthError(); 
 
+// Our fake "database" with the users
+vector<unique_ptr<User>> users;
+
 int main() {
+    init_fake_database();
 
-    int role = -1; 
-    role = authenticate(); 
+    User* user = authenticate(); 
 
-    if(role == 1) {
-        viewPatientDashboard();
-    } else if (role == 2) {
-        viewStaffDashboard(); 
+    if (user->role() == "Patient") {
+        viewPatientDashboard(user);
     } else {
-        showAuthError(); 
+        viewStaffDashboard(user); 
     }
 
     return 0; 
 
 }
 
-int authenticate() {
-    return 1;
+void init_fake_database() {
+    // Add some fake users
+    users.push_back(make_unique<Physician>(0, "Jack", "123 Random St", "09-10-2004"));
+    users.push_back(make_unique<BillingStaff>(1, "Case", "123 Random St", "05-20-2004"));
+    users.push_back(make_unique<ClinicalStaff>(2, "Connor", "456 Hello St", "12-23-2004"));
+    users.push_back(make_unique<Patient>(3, "Person1", "101 Patient St", "01-01-2001"));
+    users.push_back(make_unique<Patient>(4, "Person2", "102 Patient St", "03-03-2003"));
+    users.push_back(make_unique<SchedulingStaff>(5, "Maris", "984 Hello St", "04-03-2003"));
 }
 
-void viewPatientDashboard() {
+User* authenticate() {
+    int role;
+
+    cout << "\n-----------------------------------------------------\n";
+    cout << "------------------Authentication---------------------\n";
+
+    for (auto &user : users) {
+        user.get()->display_info();
+    }
+    
+    cout << "Enter the ID of your user: ";
+
+    while (!(cin >> role) || (role < 0 || role >= users.size())) {
+        cout << "Invalid input. Try again: ";
+        cin.clear();
+        cin.ignore(10000, '\n'); 
+    }
+
+    return users[role].get();
+}
+
+void viewPatientDashboard(User* user) {
+    cout << "Patient\n";
 
     //Present options
     //Based on what user chooses, execute one of following functions. 
@@ -51,7 +86,10 @@ void viewPatientDashboard() {
 
 }
 
-void viewStaffDashboard() {
+void viewStaffDashboard(User* user) {
+    cout << "\n\n-----------------------------------------------------\n";
+    cout << "------------------Staff Dashboard--------------------\n\n";
+    cout << "Logged in as: " << user->name << endl;
 
 	//Present options
 	//Based on what the user chooses, execute the following functions. 
