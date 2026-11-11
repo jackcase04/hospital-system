@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -Wall -g -Iheaders
 
-TARGET = a.out
+TARGET = main.exe
 SRC_DIR = src
 BUILD_DIR = build
 

@@ -41,13 +41,35 @@ int authenticate() {
 
 void viewPatientDashboard() {
 
+    int patientOption;
+
     //Present options
     //Based on what user chooses, execute one of following functions. 
-    viewAppointments(); 
-	viewSpecialtyList();
-    viewProviderList(); 
+    //Give user option to exit application
+    cout << "Select an option" << "\n";
+    cout << "1. View Appointments: " << "\n";
+    cout << "2. View Specialty List: " << "\n";
+    cout << "3. View Provider List: " << "\n";
+    cout << "4. Exit Applicaiton" << "\n";
+    cin >> patientOption;
 
-    //Give user option to exit application.
+    switch(patientOption){
+        case 1:
+            viewAppointments();
+            //break;
+        case 2:
+            viewSpecialtyList();
+            //break;
+        case 3:
+            viewProviderList();
+           // break;
+        case 4:
+            return;
+    }
+    
+    if (patientOption > 4){
+        cout <<"Invalid option";
+    }
 
 }
 
@@ -64,9 +86,30 @@ void viewStaffDashboard() {
 
 void viewAppointments() {
 
+    int selection;
 	//Just have a print out of some dummy appointments. 
 	//Give the user the ability to enter a number to view a specific appointment or a control value to return control
 	//to the calling function. 
+    cout << "Available Appointments" << "\n";
+    cout << "1. Friday, November 13th" << "\n";
+    cout << "2. Monday, November 16th" << "\n";
+    cout << "3. Tuesday, November 17th" << "\n";
+    cout << "4. Return to dashboard";
+
+    cout << "Select an appointment: ";
+    cin >> selection;
+    
+    if (selection < 4){
+        viewAppointmentDetails(selection);
+    }
+    else if (selection == 4){
+        viewPatientDashboard();
+    }
+    else{
+        cout << "Invalid option";
+    }
+
+
 
 }
 
@@ -74,13 +117,40 @@ void viewAppointmentDetails(int selection) {
 
 	//Just print out dummy information for that specific appointment. 
 	//Return control to the calling function by default.
+    switch(selection){
+        case 1:
+            cout << "asdgkf";
+        case 2:
+            cout << "dskjghf";
+        case 3:
+            cout << "dsgfh";
+    }
 
 }
 
 void viewSpecialtyList() {
 
+    int selection;
 	//Just have a print out of some dummy specialties. 
 	//Give the user the option to select a given specialty for detailed information.
+
+    cout << "Specialty List\n";
+    cout << "1. Primary Care\n";
+    cout << "2. Dermatologist\n";
+    cout << "3. Cardiologist\n";
+    cout << "4. Endocrinologist\n";
+    cout << "Select a number: ";
+    cin >> selection;
+
+    if (selection > 4){
+        viewSpecialtyDetails(selection);
+    }
+    else if (selection == 4){
+        viewPatientDashboard();
+    }
+    else{
+        cout << "Invalid option";
+    }
 
 }
 
@@ -89,12 +159,19 @@ void viewSpecialtyDetails(int selection) {
 	//Just print out dummy information for that specific specialty. 
 	//Return control to the calling function by default.
 
+
 }
 
 void viewProviderList() {
 
+    int selection;
 	//Just have a print out of some dummy providers
 	//Give the user the option to select a given provider for detailed information.
+    cout << "Provider List"<< "\n";
+    cout << "1. Friday, November 13th" << "\n";
+    cout << "2. Monday, November 16th" << "\n";
+    cout << "3. Tuesday, November 17th" << "\n";
+    cout << "4. Return to dashboard";
 
 }
 
@@ -142,4 +219,8 @@ void showAuthError() {
 
     //Print an error message saying the user failed to authenticate.
 
+}
+
+int authenticate(){ ////temp
+    return 1;
 }
