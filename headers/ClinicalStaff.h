@@ -1,22 +1,26 @@
 #ifndef CLINICAL_STAFF_H
 #define CLINICAL_STAFF_H
 
-#include <string>
 #include "User.h"
-#include <vector>
 #include "Patient.h"
 #include "Appointment.h"
-using namespace std;
+
+#include <string>
+#include <vector>
+
+class Patient;
+class Appointment;
 
 class ClinicalStaff : public User {
     public:
-        vector<string> personal_profile;
-        vector<Patient> patients;
+        std::vector<std::string> personal_profile;
+        std::vector<Patient> patients;
 
-        vector<Appointment> view_patient_appointments(Patient patient);
-        vector<string> view_patient_history(Patient patient);
+        std::vector<Appointment> view_patient_appointments(Patient &patient);
+        std::vector<std::string> view_patient_history(Patient &patient);
         void manage_personal_profile();
-        void message_patient(Patient patient, string message);
+        void message_patient(Patient &patient, std::string message);
 
 };
+
 #endif

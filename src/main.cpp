@@ -1,5 +1,6 @@
 #include <iostream>
-#include "../headers/Headers.h"
+#include "Headers.h"
+
 using namespace std; 
 
 int authenticate(); 
@@ -34,6 +35,10 @@ int main() {
 
 }
 
+int authenticate() {
+    return 1;
+}
+
 void viewPatientDashboard() {
 
     //Present options
@@ -50,8 +55,8 @@ void viewStaffDashboard() {
 
 	//Present options
 	//Based on what the user chooses, execute the following functions. 
-	viewPatients();
-	viewPatientAppointments();
+	// viewPatients();
+	// viewPatientAppointments();
 	
 	//Give user the option to exit application.
 

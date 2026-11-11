@@ -1,20 +1,21 @@
 #ifndef APPOINTMENT_H
 #define APPOINTMENT_H
 
-#include <string>
-#include <vector>
 #include "Patient.h"
 #include "ClinicalStaff.h"
-using namespace std;
+
+#include <string>
+
+class Patient;
 
 class Appointment {
     public:
-    int id;
-    string date;
-    string time;
-    ClinicalStaff staff;
-    Patient patient;
-    string description;
+        int id;
+        std::string date;
+        std::string time;
+        ClinicalStaff staff;
+        Patient *patient;
+        std::string description;
 };
 
 #endif
