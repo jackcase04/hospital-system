@@ -34,8 +34,10 @@ int main() {
 
     if (user->role() == "Patient") {
         viewPatientDashboard(user);
-    } else {
+    } else if (user->role() == "BillingStaff" || user->role() == "ClinicalStaff" || user->role() == "Physician" || user->role() == "SchedulingStaff") {
         viewStaffDashboard(user); 
+    } else {
+        showAuthError(); 
     }
 
     return 0; 
@@ -87,9 +89,38 @@ void viewPatientDashboard(User* user) {
 }
 
 void viewStaffDashboard(User* user) {
-    cout << "\n\n-----------------------------------------------------\n";
-    cout << "------------------Staff Dashboard--------------------\n\n";
-    cout << "Logged in as: " << user->name << endl;
+    int selection; 
+    bool exit = false; 
+
+    do {
+
+        cout << "\n\n-----------------------------------------------------\n";
+        cout << "------------------Staff Dashboard--------------------\n\n";
+        cout << "Logged in as: " << user->name << endl;
+
+        cout << "\n\n You may select from the following options: " << endl; 
+        cout << "(1) View Patients" << endl; 
+        //cout << "(2) View Patient Appointments" << endl;  Not implemented yet for staff as a function. TODO in the future.
+        cout << "(2) Exit Application" << endl; 
+        cout << "\n Enter the appropriate number to select: "; 
+
+        cin >> selection; 
+        if (selection == 1) {
+            viewPatientList(); 
+        } else if (selection == 2) {
+            exit = true;
+        } else {
+            while(selection != 1 && selection != 2) {
+                cout << "You selected an invalid option. Please try again: ";
+                if (selection == 1) {
+                    viewPatientList(); 
+                } else if (selection == 2) {
+                    exit = true;
+                }
+            }
+        }
+
+    } while (!exit); 
 
 	//Present options
 	//Based on what the user chooses, execute the following functions. 
@@ -178,6 +209,7 @@ void editPatientInfo() {
 
 void showAuthError() {
 
-    //Print an error message saying the user failed to authenticate.
+     //Print an error message saying the user failed to authenticate.
+    cout << "Authentication failed. Please try again later." << endl; 
 
 }
