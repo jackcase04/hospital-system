@@ -89,38 +89,35 @@ void viewPatientDashboard(User* user) {
 }
 
 void viewStaffDashboard(User* user) {
-    int selection; 
-    bool exit = false; 
+    int selection;
+    bool done = false;
 
     do {
-
         cout << "\n\n-----------------------------------------------------\n";
         cout << "------------------Staff Dashboard--------------------\n\n";
         cout << "Logged in as: " << user->name << endl;
 
-        cout << "\n\n You may select from the following options: " << endl; 
-        cout << "(1) View Patients" << endl; 
-        //cout << "(2) View Patient Appointments" << endl;  Not implemented yet for staff as a function. TODO in the future.
-        cout << "(2) Exit Application" << endl; 
-        cout << "\n Enter the appropriate number to select: "; 
+        cout << "\n\nYou may select from the following options:" << endl;
+        cout << "(1) View Patients" << endl;
+        // cout << "(2) View Patient Appointments" << endl;  TODO
+        cout << "(2) Exit Application" << endl;
+        cout << "\nEnter the appropriate number to select: ";
 
-        cin >> selection; 
-        if (selection == 1) {
-            viewPatientList(); 
-        } else if (selection == 2) {
-            exit = true;
-        } else {
-            while(selection != 1 && selection != 2) {
-                cout << "You selected an invalid option. Please try again: ";
-                if (selection == 1) {
-                    viewPatientList(); 
-                } else if (selection == 2) {
-                    exit = true;
-                }
-            }
+        // Keep asking until we get a valid number (1 or 2)
+        while (!(cin >> selection) || (selection != 1 && selection != 2)) {
+            cout << "You selected an invalid option. Please try again: ";
+            cin.clear();              // clear the error state if they typed letters
+            cin.ignore(10000, '\n');  // throw away the bad input
         }
 
-    } while (!exit); 
+        if (selection == 1) {
+            viewPatientList();
+        } else {
+            done = true;
+        }
+
+    } while (!done);
+}
 
 	//Present options
 	//Based on what the user chooses, execute the following functions. 
@@ -129,7 +126,6 @@ void viewStaffDashboard(User* user) {
 	
 	//Give user the option to exit application.
 
-}
 
 void viewAppointments() {
 
