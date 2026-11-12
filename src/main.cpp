@@ -36,8 +36,10 @@ int main() {
 
     if (user->role() == "Patient") {
         viewPatientDashboard(user);
-    } else {
+    } else if (user->role() == "BillingStaff" || user->role() == "ClinicalStaff" || user->role() == "Physician" || user->role() == "SchedulingStaff") {
         viewStaffDashboard(user); 
+    } else {
+        showAuthError(); 
     }
 
     return 0; 
@@ -115,9 +117,35 @@ void viewPatientDashboard(User* user) {
 }
 
 void viewStaffDashboard(User* user) {
-    cout << "\n\n-----------------------------------------------------\n";
-    cout << "------------------Staff Dashboard--------------------\n\n";
-    cout << "Logged in as: " << user->name << endl;
+    int selection;
+    bool done = false;
+
+    do {
+        cout << "\n\n-----------------------------------------------------\n";
+        cout << "------------------Staff Dashboard--------------------\n\n";
+        cout << "Logged in as: " << user->name << endl;
+
+        cout << "\n\nYou may select from the following options:" << endl;
+        cout << "(1) View Patients" << endl;
+        // cout << "(2) View Patient Appointments" << endl;  TODO
+        cout << "(2) Exit Application" << endl;
+        cout << "\nEnter the appropriate number to select: ";
+
+        // Keep asking until we get a valid number (1 or 2)
+        while (!(cin >> selection) || (selection != 1 && selection != 2)) {
+            cout << "You selected an invalid option. Please try again: ";
+            cin.clear();              // clear the error state if they typed letters
+            cin.ignore(10000, '\n');  // throw away the bad input
+        }
+
+        if (selection == 1) {
+            viewPatientList();
+        } else {
+            done = true;
+        }
+
+    } while (!done);
+}
 
 	//Present options
 	//Based on what the user chooses, execute the following functions. 
@@ -126,7 +154,6 @@ void viewStaffDashboard(User* user) {
 	
 	//Give user the option to exit application.
 
-}
 
 void viewAppointments(User* user) {
 
@@ -342,7 +369,8 @@ void editPatientInfo() {
 
 void showAuthError() {
 
-    //Print an error message saying the user failed to authenticate.
+     //Print an error message saying the user failed to authenticate.
+    cout << "Authentication failed. Please try again later." << endl; 
 
 }
 
