@@ -337,7 +337,30 @@ void viewProviderDetails(int selection, User* user) {
 void viewPatientList() {
 
 	//Just print a dummy list of patients that can be selected from. 
-	//Upon user exit return to calling function. 
+	//Upon user exit return to calling function.
+    
+    int done = false; 
+    int selection = -1; 
+    
+    do {
+        cout << "\n\n----------------------Patient List------------------\n\n"; 
+        cout << "1. Mr. Jones\n"; 
+        cout << "2. Mrs. Johansen\n"; 
+        cout << "3. Miss Hauffen\n"; 
+        cout << "4. Return to Dashboard\n"; 
+
+        cout << "Select a number: "; 
+        cin >> selection; 
+
+        if(selection >= 1 && selection <= 3) {
+            viewPatient(selection); 
+        } else if (selection == 4) {
+            done = true; 
+            return; 
+        } else {
+            cout << "Invalid option: "; 
+        }
+    } while(!done); 
 
 }
 
@@ -346,7 +369,20 @@ void viewPatient(int selection) {
 	//Just print information for a specific patient.
 	//Give user the option to edit patient info.  
 	
-	
+    switch(selection) {
+        case 1: 
+            cout << "\nMr. Andrew Jones - North Pine St., Rolla, MO 65403 - (123) 456-7890" << endl;
+            break;
+        case 2:
+            cout << "\nMrs. Elizabeth Johansen - 180 County Rd., Rolla, MO 65403 - (098) 765-4321" << endl;
+            break;
+        case 3: 
+            cout << "\nMiss Irena Hauffen - 339 Pheasant Way, Rolla, MO 65401 - (348) 367-7328" << endl;
+            break; 
+    }
+
+    return; 
+    	
 }
 
 void checkInPatient() {
