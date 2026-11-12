@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <memory>
+#include <vector>
+#include <string>
 
 using namespace std; 
 
@@ -12,17 +14,17 @@ void init_fake_database();
 User* authenticate(); 
 void viewPatientDashboard(User* user); 
 void viewStaffDashboard(User* user);
-void viewAppointments(); 
-void viewAppointmentDetails(int selection);
-void viewSpecialtyList();
-void viewSpecialtyDetails(int selection); 
-void viewProviderList(); 
-void viewProviderDetails(); 
+void viewAppointments(User* user); 
+void viewAppointmentDetails(int selection, User* user);
+void viewSpecialtyList(User* user);
+void viewSpecialtyDetails(int selection, User* user); 
+void viewProviderList(User* user); 
+void viewProviderDetails(int selection, User* user); 
 void viewPatientList();
 void viewPatient(int selection); 
 void checkInPatient(); 
 void editPatientInfo(); 
-void showAuthError(); 
+void showAuthError();
 
 // Our fake "database" with the users
 vector<unique_ptr<User>> users;
@@ -74,30 +76,34 @@ User* authenticate() {
 }
 
 void viewPatientDashboard(User* user) {
-    cout << "Patient\n";
+    cout << "\n\n-----------------------------------------------------\n";
+    cout << "------------------Patient Dashboard--------------------\n\n";
+    cout << "Logged in as: " << user->name << endl;
+    cout << "\n" << endl;
 
     int patientOption;
 
     //Present options
     //Based on what user chooses, execute one of following functions. 
     //Give user option to exit application
-    cout << "Select an option" << "\n";
-    cout << "1. View Appointments: " << "\n";
-    cout << "2. View Specialty List: " << "\n";
-    cout << "3. View Provider List: " << "\n";
-    cout << "4. Exit Applicaiton" << "\n";
+
+    cout << "1. View Appointments\n";
+    cout << "2. View Specialty List\n";
+    cout << "3. View Provider List\n";
+    cout << "4. Exit Applicaiton\n";
+    cout << "Selection: ";
     cin >> patientOption;
 
     switch(patientOption){
         case 1:
-            viewAppointments();
-            //break;
+            viewAppointments(user);
+            break;
         case 2:
-            viewSpecialtyList();
-            //break;
+            viewSpecialtyList(user);
+            break;
         case 3:
-            viewProviderList();
-           // break;
+            viewProviderList(user);
+            break;
         case 4:
             return;
     }
@@ -122,69 +128,105 @@ void viewStaffDashboard(User* user) {
 
 }
 
-void viewAppointments() {
+void viewAppointments(User* user) {
 
-    int selection;
+    Patient* patient = dynamic_cast<Patient*>(user);
+
 	//Just have a print out of some dummy appointments. 
 	//Give the user the ability to enter a number to view a specific appointment or a control value to return control
 	//to the calling function. 
-    cout << "Available Appointments" << "\n";
-    cout << "1. Friday, November 13th" << "\n";
-    cout << "2. Monday, November 16th" << "\n";
-    cout << "3. Tuesday, November 17th" << "\n";
-    cout << "4. Return to dashboard";
 
-    cout << "Select an appointment: ";
-    cin >> selection;
-    
-    if (selection < 4){
-        viewAppointmentDetails(selection);
+    if (patient == nullptr) {
+        cout << "Unable to access patient appointments.\n";
+        return;
     }
-    else if (selection == 4){
-        viewPatientDashboard();
+
+    int selection;
+
+    cout << "------------------Available Appointments--------------------\n\n";
+    cout <<"1. November 16, 2:00 PM\n";
+    cout <<"2. November 17, 2:30 PM\n";
+    cout <<"3. Return to dashboard\n";
+
+    cout <<"\nSelect an appointment:";
+    cin >> selection;
+
+    if(selection >= 1 && selection <= 3){
+        viewAppointmentDetails(selection, user);
+    }
+    else if(selection == 3){
+        viewPatientDashboard(user);
     }
     else{
-        cout << "Invalid option";
+        cout <<"Invalid option\n";
     }
-
-
 
 }
 
-void viewAppointmentDetails(int selection) {
+void viewAppointmentDetails(int selection, User* user) {
+
+    Patient* patient = dynamic_cast<Patient*>(user);
+
+    string apptChoice;
 
 	//Just print out dummy information for that specific appointment. 
 	//Return control to the calling function by default.
+
     switch(selection){
         case 1:
-            cout << "asdgkf";
+            cout << "Dr. A : Primary Care\n";
+            break;
         case 2:
-            cout << "dskjghf";
-        case 3:
-            cout << "dsgfh";
+            cout << "Dr. C : Cardiologist\n";
+            break;
+    }
+
+    cout << "\nWould you like to Confirm, Reschedule, or Cancel your appointment?\n";
+    cin >> apptChoice;
+
+    if(apptChoice == "Confirm"){
+        cout << "Your appointment has been confirmed!";
+    }
+    else if(apptChoice == "Reschedule"){
+        string newDate;
+
+        cout << "Enter new appointment date: ";
+        cin >> newDate;
+
+        patient->reschedule_appointment(selection, newDate);
+    }
+    else if(apptChoice == "Cancel"){
+        cout << "Your appointment has been canceled\n";
+        patient->cancel_appointment(selection);
+        cout << "Redirecting you to the dashboard\n";
+        viewPatientDashboard(user);
+    }
+    else{
+        cout << "Invalid option\n";
     }
 
 }
 
-void viewSpecialtyList() {
+void viewSpecialtyList(User* user) {
 
     int selection;
 	//Just have a print out of some dummy specialties. 
 	//Give the user the option to select a given specialty for detailed information.
 
-    cout << "Specialty List\n";
+    cout << "\n\n------------------Specialty List--------------------\n\n";
     cout << "1. Primary Care\n";
     cout << "2. Dermatologist\n";
     cout << "3. Cardiologist\n";
-    cout << "4. Endocrinologist\n";
+    cout << "4. Return to Dashboard\n";
+
     cout << "Select a number: ";
     cin >> selection;
 
-    if (selection > 4){
-        viewSpecialtyDetails(selection);
+    if (selection >= 1 && selection <=3){
+        viewSpecialtyDetails(selection, user);
     }
     else if (selection == 4){
-        viewPatientDashboard();
+        viewPatientDashboard(user);
     }
     else{
         cout << "Invalid option";
@@ -192,31 +234,76 @@ void viewSpecialtyList() {
 
 }
 
-void viewSpecialtyDetails(int selection) {
+void viewSpecialtyDetails(int selection, User* user) {
 
 	//Just print out dummy information for that specific specialty. 
 	//Return control to the calling function by default.
+    cout <<"------------------Specialty Details--------------------\n\n";
 
+    switch(selection){
+        case 1:
+            cout << "Primary Care:\n\n";
+            cout <<  "Provides general care for everyday health needs.";
+            return viewSpecialtyList(user);
+        case 2:
+            cout << "Dermatologist:\n\n";
+            cout << "Provides care related to skin conditions";
+            return viewSpecialtyList(user);
+        case 3:
+            cout << "Cardiologist:\n\n";
+            cout << "Provides care related to heard and blood conditions";
+            return viewSpecialtyList(user);
+    }
 
 }
 
-void viewProviderList() {
+void viewProviderList(User* user) {
 
-    int selection;
 	//Just have a print out of some dummy providers
 	//Give the user the option to select a given provider for detailed information.
-    cout << "Provider List"<< "\n";
-    cout << "1. Friday, November 13th" << "\n";
-    cout << "2. Monday, November 16th" << "\n";
-    cout << "3. Tuesday, November 17th" << "\n";
-    cout << "4. Return to dashboard";
 
+    int selection;
+
+    cout << "\n\n------------------Provider List--------------------\n\n";
+    cout << "1. Dr. A - Primary Care\n";
+    cout << "2. Dr. B - Dermatologist\n";
+    cout << "3. Dr. C - Cardiologist\n";
+    cout << "4. Return to dashboard\n";
+
+    cout << "Select a provider: ";
+    cin >> selection;
+
+    if(selection >= 1 && selection <= 3){
+        viewProviderDetails(selection, user);
+    }
+    else if(selection == 4){
+        return;
+    }
+    else{
+        cout << "Invalid option\n";
+    }
 }
 
-void viewProviderDetails(int selection) {
+void viewProviderDetails(int selection, User* user) {
 
 	//Just print out dummy information for that specific specialty. 
 	//Return control to the calling function default. 
+
+    cout << "------------------Provider Details--------------------\n\n";
+    switch(selection){
+        case 1:
+            cout << "Dr. A:";
+            cout << "Services: General examinations and consultations";
+            return viewProviderList(user);
+        case 2:
+            cout << "Dr. B:";
+            cout << "Services: Skin examinations and consultations";
+            return viewProviderList(user);
+        case 3:
+            cout << "Dr. C:";
+            cout << "Services: Heart and blood screenings and consultations";
+            viewProviderList(user);
+    }
 
 }
 
@@ -259,6 +346,21 @@ void showAuthError() {
 
 }
 
-int authenticate(){ ////temp
-    return 1;
+//Added for patient appointment settings (in functions but not really being used atm)
+void Patient::reschedule_appointment(int id, string date){
+    for(Appointment& appt : appointments){
+        if (appt.id == id){
+            appt.date = date;
+            return;
+        }
+    }
+}
+
+void Patient::cancel_appointment(int id){
+    for(auto it = appointments.begin(); it != appointments.end(); ++it){
+        if (it->id == id){
+            appointments.erase(it);
+            return;
+        }
+    }
 }
